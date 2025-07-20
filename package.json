@@ -1,7 +1,7 @@
 {
   "name": "runtime-memory-cache",
-  "version": "0.0.1",
-  "description": "A lightweight in-memory cache for Node.js with optional TTL support, fast lookups, and zero dependencies.",
+  "version": "0.1.0",
+  "description": "A lightweight, high-performance in-memory cache for Node.js with TTL support, statistics tracking, and zero dependencies.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,7 +12,9 @@
     "dev": "ts-node src/index.ts",
     "play": "ts-node src/playground.ts",
     "prepublishOnly": "npm run clean && npm run build",
-    "publish": "npm publish"
+    "publish": "npm publish",
+    "version": "npm run build && git add -A",
+    "postversion": "git push && git push --tags"
   },
   "author": "https://github.com/gsteja2307",
   "repository": {
@@ -20,7 +22,10 @@
     "url": "https://github.com/gsteja2307/runtime-memory-cache.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "license": "MIT",
   "devDependencies": {
@@ -60,6 +65,13 @@
     "runtime-memoization",
     "runtime-fast-cache",
     "runtime-lightweight-cache",
-    "runtime-zero-dependency-cache"
+    "runtime-zero-dependency-cache",
+    "statistics-tracking",
+    "cache-analytics",
+    "fifo-eviction",
+    "modular-cache",
+    "typescript-cache",
+    "cache-cleanup",
+    "high-performance-cache"
   ]
 }

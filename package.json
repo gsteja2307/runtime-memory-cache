@@ -10,7 +10,9 @@
     "clean": "rimraf dist",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "play": "ts-node src/playground.ts"
+    "play": "ts-node src/playground.ts",
+    "prepublishOnly": "npm run clean && npm run build",
+    "publish": "npm publish"
   },
   "author": "https://github.com/gsteja2307",
   "repository": {

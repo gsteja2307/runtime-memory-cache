@@ -1,0 +1,63 @@
+{
+  "name": "runtime-memory-cache",
+  "version": "0.0.1",
+  "description": "A lightweight in-memory cache for Node.js with optional TTL support, fast lookups, and zero dependencies.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "play": "ts-node src/playground.ts"
+  },
+  "author": "https://github.com/gsteja2307",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gsteja2307/runtime-memory-cache.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.15",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "keywords": [
+    "cache",
+    "memory",
+    "in-memory",
+    "ttl",
+    "memory-cache",
+    "nodejs-cache",
+    "key-value-store",
+    "memoization",
+    "performance",
+    "fast-cache",
+    "data-store",
+    "runtime-cache",
+    "runtime-memory-cache",
+    "node-cache",
+    "lightweight-cache",
+    "zero-dependency-cache",
+    "fast-lookup",
+    "ttl-cache",
+    "memory-store",
+    "key-value-cache",
+    "nodejs-memory-cache",
+    "in-memory-cache",
+    "simple-cache",
+    "nodejs-performance-cache",
+    "runtime-performance-cache",
+    "runtime-data-store",
+    "runtime-key-value-store",
+    "runtime-memoization",
+    "runtime-fast-cache",
+    "runtime-lightweight-cache",
+    "runtime-zero-dependency-cache"
+  ]
+}

@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Latest Release]
+## [Unreleased]
+
+## [0.1.1] - 2025-07-20
+
+### Changed
+- 🔧 **Simplified publish script** - Made publishing easier with one simple command and removed extra scripts.
 
 ## [0.1.0] - 2025-07-20
 
@@ -48,6 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## Release Notes
+
+### v0.1.1 - Updated Publish Script
+Made publishing easier with one simple command and removed extra scripts.
 
 ### v0.1.0 - Initial Release
 This is the first release of runtime-memory-cache, providing a comprehensive in-memory caching solution for Node.js applications. The focus was on performance, modularity, and developer experience while maintaining zero dependencies.

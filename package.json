@@ -11,10 +11,7 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "play": "ts-node src/playground.ts",
-    "prepublishOnly": "npm run clean && npm run build",
-    "publish": "npm publish",
-    "version": "npm run build && git add -A",
-    "postversion": "git push && git push --tags"
+    "publishPackage": "npm run clean && npm run build && npm publish"
   },
   "author": "https://github.com/gsteja2307",
   "repository": {

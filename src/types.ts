@@ -5,7 +5,21 @@ export type CacheEntry = {
   value: any;
   expiresAt?: number;
   createdAt: number;
+  lastAccessedAt: number;
 };
+
+/**
+ * Eviction policy options
+ */
+export type EvictionPolicy = 'FIFO' | 'LRU';
+
+/**
+ * Memory usage information
+ */
+export interface MemoryUsage {
+  estimatedBytes: number;
+  averageBytesPerEntry: number;
+}
 
 /**
  * Cache statistics interface
@@ -28,4 +42,6 @@ export interface CacheOptions {
   maxSize?: number;
   /** Enable statistics tracking */
   enableStats?: boolean;
+  /** Eviction policy - FIFO (default) or LRU */
+  evictionPolicy?: EvictionPolicy;
 }

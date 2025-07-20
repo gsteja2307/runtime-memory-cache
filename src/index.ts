@@ -1,19 +1,25 @@
-import { CacheEntry, CacheOptions, CacheStats } from './types';
-import { CacheUtils } from './utils';
+import { CacheEntry, CacheOptions, CacheStats, EvictionPolicy, MemoryUsage } from './types';
+import { CacheUtils, ValidationUtils } from './utils';
 import { StatsTracker } from './stats';
 
 /**
- * A lightweight in-memory cache with TTL support and performance optimizations
+ * A lightweight in-memory cache with TTL support, configurable eviction policies, 
+ * memory tracking, and comprehensive error handling
  */
 export class RuntimeMemoryCache {
   private readonly store = new Map<string, CacheEntry>();
   private readonly maxSize: number;
   private readonly ttl?: number;
+  private readonly evictionPolicy: EvictionPolicy;
   private readonly statsTracker?: StatsTracker;
 
   constructor(options: CacheOptions = {}) {
+    // Validate options
+    ValidationUtils.validateCacheOptions(options);
+
     this.ttl = options.ttl;
     this.maxSize = options.maxSize || 1000;
+    this.evictionPolicy = options.evictionPolicy || 'FIFO';
     this.statsTracker = options.enableStats ? new StatsTracker(this.maxSize) : undefined;
   }
 
@@ -21,22 +27,40 @@ export class RuntimeMemoryCache {
    * Store a value in the cache with optional TTL override
    */
   set(key: string, value: any, ttl?: number): void {
-    // Handle cache size limit with FIFO eviction
-    if (this.store.size >= this.maxSize) {
-      this.evictOldest();
+    try {
+      // Validate inputs
+      ValidationUtils.validateKey(key);
+      if (ttl !== undefined) {
+        ValidationUtils.validateTTL(ttl);
+      }
+
+      // Handle cache size limit with configurable eviction policy
+      if (this.store.size >= this.maxSize) {
+        this.evictEntry();
+      }
+
+      const expiresAt = CacheUtils.calculateExpiresAt(ttl, this.ttl);
+      const entry = CacheUtils.createEntry(value, expiresAt);
+
+      this.store.set(key, entry);
+      this.updateStats();
+    } catch (error) {
+      // Re-throw validation errors
+      throw error;
     }
-
-    const expiresAt = CacheUtils.calculateExpiresAt(ttl, this.ttl);
-    const entry = CacheUtils.createEntry(value, expiresAt);
-
-    this.store.set(key, entry);
-    this.updateStats();
   }
 
   /**
    * Retrieve a value from the cache
    */
   get(key: string): any {
+    try {
+      ValidationUtils.validateKey(key);
+    } catch (error) {
+      // For get operations, return undefined for invalid keys instead of throwing
+      return undefined;
+    }
+
     const entry = this.store.get(key);
 
     if (!entry) {
@@ -51,6 +75,11 @@ export class RuntimeMemoryCache {
       return undefined;
     }
 
+    // Update access time for LRU policy
+    if (this.evictionPolicy === 'LRU') {
+      CacheUtils.updateAccessTime(entry);
+    }
+
     this.statsTracker?.recordHit();
     return entry.value;
   }
@@ -59,13 +88,44 @@ export class RuntimeMemoryCache {
    * Check if a key exists and is not expired
    */
   has(key: string): boolean {
-    return this.get(key) !== undefined;
+    try {
+      ValidationUtils.validateKey(key);
+    } catch (error) {
+      // For has operations, return false for invalid keys
+      return false;
+    }
+
+    const entry = this.store.get(key);
+
+    if (!entry) {
+      return false;
+    }
+
+    if (CacheUtils.isExpired(entry)) {
+      this.store.delete(key);
+      this.updateStats();
+      return false;
+    }
+
+    // Update access time for LRU policy
+    if (this.evictionPolicy === 'LRU') {
+      CacheUtils.updateAccessTime(entry);
+    }
+
+    return true;
   }
 
   /**
    * Delete a specific key from the cache
    */
   del(key: string): boolean {
+    try {
+      ValidationUtils.validateKey(key);
+    } catch (error) {
+      // For delete operations, return false for invalid keys
+      return false;
+    }
+
     const deleted = this.store.delete(key);
     if (deleted) {
       this.updateStats();
@@ -121,12 +181,26 @@ export class RuntimeMemoryCache {
   }
 
   /**
-   * Evict the oldest entry from the cache
+   * Get current eviction policy
    */
-  private evictOldest(): void {
-    const firstKey = CacheUtils.getFirstKey(this.store);
-    if (firstKey) {
-      this.store.delete(firstKey);
+  getEvictionPolicy(): EvictionPolicy {
+    return this.evictionPolicy;
+  }
+
+  /**
+   * Get estimated memory usage
+   */
+  // getMemoryUsage(): MemoryUsage {
+  //   return CacheUtils.calculateMemoryUsage(this.store);
+  // }
+
+  /**
+   * Evict an entry based on the configured eviction policy
+   */
+  private evictEntry(): void {
+    const keyToEvict = CacheUtils.getKeyToEvict(this.store, this.evictionPolicy);
+    if (keyToEvict) {
+      this.store.delete(keyToEvict);
       this.statsTracker?.recordEviction();
     }
   }
@@ -135,10 +209,12 @@ export class RuntimeMemoryCache {
    * Update internal statistics
    */
   private updateStats(): void {
-    this.statsTracker?.updateSize(this.store.size);
+    if (this.statsTracker) {
+      this.statsTracker.updateSize(this.store.size);
+    }
   }
 }
 
 // Export types and interfaces for consumers
-export { CacheOptions, CacheStats } from './types';
+export { CacheOptions, CacheStats, EvictionPolicy, MemoryUsage } from './types';
 export default RuntimeMemoryCache;

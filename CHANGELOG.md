@@ -6,36 +6,66 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- **Memory Tracking**: New `getMemoryUsage()` method provides detailed memory usage statistics
+  - `estimatedBytes`: Total estimated memory usage in bytes
+  - `averageBytesPerEntry`: Average memory usage per cache entry
+
+## [0.2.0] - 2025-07-21
+
+### Added
+
+- **Input Validation**: Comprehensive validation for all cache operations
+  - Empty key validation with descriptive error messages
+  - Maximum key length validation (250 characters)
+  - TTL validation (must be positive numbers)
+  - Graceful error handling for invalid inputs
+- **Enhanced Statistics**: Memory usage tracking integrated into cache statistics
+  - Updated `CacheStats` interface with `memoryUsage` property
+  - Real-time memory usage calculation and tracking
+- **LRU (Least Recently Used) eviction policy** - New eviction option alongside existing FIFO
+- **Configurable eviction policies** - Choose between FIFO and LRU eviction strategies
+- **Access time tracking** - Tracks last access time for LRU implementation
+- **New API method**: `getEvictionPolicy()` - Get current eviction policy
+- **Enhanced playground examples** - Demonstrates both FIFO and LRU eviction policies
+
+### Changed
+- **Improved cache entry structure** - Added `lastAccessedAt` field for LRU support
+- **Enhanced utility functions** - New `getKeyToEvict()` method for policy-based eviction
+- **Updated documentation** - Comprehensive eviction policy documentation in README
+- **Error Handling**: More robust error handling with specific error messages
+
+### Fixed  
+- **Better has() method** - Now properly updates access time for LRU without calling get()
 
 ## [0.1.1] - 2025-07-20
 
 ### Changed
-- 🔧 **Simplified publish script** - Made publishing easier with one simple command and removed extra scripts.
+- **Simplified publish script** - Made publishing easier with one simple command and removed extra scripts.
 
 ## [0.1.0] - 2025-07-20
 
 ### Added
-- 🚀 **Initial release** of runtime-memory-cache
-- 💾 **Core caching functionality** with Map-based storage
-- ⏰ **TTL (Time To Live) support** for automatic expiration
-- 📏 **Configurable maximum cache size** with FIFO eviction
-- 🔧 **Essential API methods**: `set()`, `get()`, `has()`, `del()`
-- 📊 **Statistics tracking functionality** (optional) - Track cache hits, misses, evictions
-- 🧹 **Manual cleanup method** - `cleanup()` to remove expired entries
-- 📏 **Cache size management** - New methods: `size()`, `clear()`, `keys()`
-- 🏗️ **Modular architecture** - Separated into specialized modules:
+- **Initial release** of runtime-memory-cache
+- **Core caching functionality** with Map-based storage
+- **TTL (Time To Live) support** for automatic expiration
+- **Configurable maximum cache size** with FIFO eviction
+- **Essential API methods**: `set()`, `get()`, `has()`, `del()`
+- **Statistics tracking functionality** (optional) - Track cache hits, misses, evictions
+- **Manual cleanup method** - `cleanup()` to remove expired entries
+- **Cache size management** - New methods: `size()`, `clear()`, `keys()`
+- **Modular architecture** - Separated into specialized modules:
   - `types.ts` - TypeScript interfaces and type definitions
   - `utils.ts` - Utility functions for cache operations  
   - `stats.ts` - Statistics tracking functionality
   - `exports.ts` - Centralized exports
-- 📚 **Comprehensive JSDoc documentation** - Full API documentation
-- 🎯 **Enhanced playground examples** - Real-world usage scenarios
-- 📖 **Detailed README** - Complete API reference with examples
-- 🔧 **Build and publish scripts** - `prepublishOnly` and `publish` commands
-- 🚫 **Zero dependencies** - Lightweight and self-contained
-- 📘 **TypeScript support** with type definitions
-- 📄 **MIT license** for open source usage
-- 📦 **Package configuration** for npm publishing
+- **Comprehensive JSDoc documentation** - Full API documentation
+- **Enhanced playground examples** - Real-world usage scenarios
+- **Detailed README** - Complete API reference with examples
+- **Build and publish scripts** - `prepublishOnly` and `publish` commands
+- **Zero dependencies** - Lightweight and self-contained
+- **TypeScript support** with type definitions
+- **MIT license** for open source usage
+- **Package configuration** for npm publishing
 
 ### Changed
 
@@ -44,11 +74,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Features
-- ⚡ **O(1) average case performance** for all operations
-- 🔄 **Automatic cleanup** of expired entries on access
-- 🪶 **Lightweight design** with minimal memory footprint
-- 🟢 **Node.js and TypeScript compatibility**
-- 🎯 **Simple and intuitive API**
+- **O(1) average case performance** for all operations
+- **Automatic cleanup** of expired entries on access
+- **Lightweight design** with minimal memory footprint
+- **Node.js and TypeScript compatibility**
+- **Simple and intuitive API**
 
 ---
 
@@ -83,3 +113,16 @@ This is the first release of runtime-memory-cache, providing a comprehensive in-
 - TypeScript support with type safety
 - Zero dependencies for lightweight deployment
 - Simple and intuitive API design
+
+---
+
+## Release Notes
+
+### v0.2.0 - LRU Eviction Policy
+Added support for Least Recently Used (LRU) eviction policy alongside the existing FIFO policy.
+
+### v0.1.1 - Workflow Optimization
+Made publishing easier with one simple command and removed extra scripts.
+
+### v0.1.0 - Initial Release
+First version with all the main features - fast caching, TTL support, statistics tracking, and clean modular code.

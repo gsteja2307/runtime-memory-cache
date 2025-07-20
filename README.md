@@ -26,9 +26,10 @@ import RuntimeMemoryCache from 'runtime-memory-cache';
 
 // Create cache with options
 const cache = new RuntimeMemoryCache({
-  ttl: 60000,        // 1 minute default TTL
-  maxSize: 1000,     // Maximum 1000 entries
-  enableStats: true  // Enable statistics tracking
+  ttl: 60000,           // 1 minute default TTL
+  maxSize: 1000,        // Maximum 1000 entries
+  enableStats: true,    // Enable statistics tracking
+  evictionPolicy: 'LRU' // Use LRU eviction policy
 });
 
 // Store data
@@ -53,6 +54,7 @@ interface CacheOptions {
   ttl?: number;        // Default TTL in milliseconds
   maxSize?: number;    // Maximum cache entries (default: 1000)
   enableStats?: boolean; // Enable statistics tracking (default: false)
+  evictionPolicy?: 'FIFO' | 'LRU'; // Eviction policy (default: 'FIFO')
 }
 ```
 
@@ -132,6 +134,22 @@ if (stats) {
 #### `resetStats(): void`
 Reset statistics counters (if enabled).
 
+#### `getEvictionPolicy(): 'FIFO' | 'LRU'`
+Get the current eviction policy being used.
+
+```typescript
+console.log(cache.getEvictionPolicy()); // 'FIFO' or 'LRU'
+```
+
+#### `getMemoryUsage(): { estimatedBytes: number; averageBytesPerEntry: number }`
+Get estimated memory usage of the cache. (NOT RELEASED)
+
+```typescript
+const memInfo = cache.getMemoryUsage();
+console.log(`Cache uses ~${memInfo.estimatedBytes} bytes`);
+console.log(`Average: ${memInfo.averageBytesPerEntry} bytes per entry`);
+```
+
 ## 📊 Statistics
 
 When `enableStats: true`, you can track cache performance:
@@ -144,6 +162,11 @@ interface CacheStats {
   maxSize: number;     // Maximum allowed size
   evictions: number;   // Number of evicted entries
 }
+(NOT RELEASED)
+interface memoryUsage {       // Memory usage tracking
+    estimatedBytes: number;        // Total estimated bytes
+    averageBytesPerEntry: number;  // Average bytes per entry
+  };
 ```
 
 ## 🔧 Usage Examples
@@ -238,13 +261,38 @@ The cache is built with a modular architecture:
 
 This structure makes the code maintainable, testable, and easy to extend.
 
-## 🔄 Eviction Policy
+## 🔄 Eviction Policies
 
-When the cache reaches `maxSize`, it uses a **FIFO (First In, First Out)** eviction policy:
+When the cache reaches `maxSize`, it automatically removes entries based on the configured eviction policy:
 
-1. The oldest entry is automatically removed
-2. New entry is added
-3. Eviction count is tracked in statistics
+### **FIFO (First In, First Out)** - Default
+- Removes the oldest inserted entry first
+- Simple and predictable behavior
+- Good for time-based caching scenarios
+
+### **LRU (Least Recently Used)**
+- Removes the entry that hasn't been accessed for the longest time
+- Better cache hit rates for access-pattern-based scenarios
+- Tracks access time on `get()` and `has()` operations
+
+```typescript
+// FIFO Cache (default)
+const fifoCache = new RuntimeMemoryCache({ 
+  maxSize: 100, 
+  evictionPolicy: 'FIFO' 
+});
+
+// LRU Cache  
+const lruCache = new RuntimeMemoryCache({ 
+  maxSize: 100, 
+  evictionPolicy: 'LRU' 
+});
+```
+
+Both policies:
+1. Automatically remove entries when cache is full
+2. Track eviction count in statistics
+3. Maintain O(1) average performance
 
 ## ⚡ Performance
 

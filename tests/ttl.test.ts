@@ -1,10 +1,6 @@
 
 import RuntimeMemoryCache from '../src/index';
 
-// Increase Jest timeout for timing-sensitive tests
-jest.setTimeout(20000);
-
-// Increase Jest timeout for timing-sensitive tests
 jest.setTimeout(15000);
 
 describe('RuntimeMemoryCache - TTL and Expiration', () => {

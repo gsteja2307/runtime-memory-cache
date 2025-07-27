@@ -1,4 +1,7 @@
 # Runtime Memory Cache
+[![NPM version](https://img.shields.io/npm/v/runtime-memory-cache.svg)](https://www.npmjs.com/package/runtime-memory-cache)
+[![NPM downloads](https://img.shields.io/npm/dm/runtime-memory-cache.svg)](https://www.npmjs.com/package/runtime-memory-cache)
+[![GitHub stars](https://img.shields.io/github/stars/gsteja2307/runtime-memory-cache.svg)](https://github.com/gsteja2307/runtime-memory-cache/stargazers)
 
 A lightweight, high-performance in-memory cache for Node.js with TTL support, automatic cleanup, memory usage tracking, and zero dependencies.
 

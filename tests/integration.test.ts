@@ -330,7 +330,6 @@ describe('RuntimeMemoryCache - Integration Tests', () => {
         expect(() => {
           cache.set(key as string, value);
         }).not.toThrow();
-        console.log(key)
         const retrieved = cache.get(key as string);
         expect(retrieved).toBeDefined();
 

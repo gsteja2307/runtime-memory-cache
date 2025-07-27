@@ -170,14 +170,14 @@ export class ValidationUtils {
    * Validate TTL value
    */
   static validateTTL(ttl: number): void {
-    if (typeof ttl !== 'number') {
+    if (typeof ttl !== 'number' || Number.isNaN(ttl)) {
       throw new TypeError('TTL must be a number');
-    }
-    if (ttl < 0) {
-      throw new Error('TTL cannot be negative');
     }
     if (!isFinite(ttl)) {
       throw new Error('TTL must be a finite number');
+    }
+    if (ttl < 0) {
+      throw new Error('TTL cannot be negative');
     }
   }
 
@@ -190,7 +190,7 @@ export class ValidationUtils {
     }
 
     if (options.maxSize !== undefined) {
-      if (typeof options.maxSize !== 'number') {
+      if (typeof options.maxSize !== 'number' || Number.isNaN(options.maxSize)) {
         throw new TypeError('maxSize must be a number');
       }
       if (options.maxSize < 1) {

@@ -1,6 +1,6 @@
 {
   "name": "runtime-memory-cache",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A lightweight, high-performance in-memory cache for Node.js with TTL support, configurable eviction policies (FIFO/LRU), statistics tracking, and zero dependencies.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

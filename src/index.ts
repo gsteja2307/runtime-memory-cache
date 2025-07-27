@@ -190,9 +190,9 @@ export class RuntimeMemoryCache {
   /**
    * Get estimated memory usage
    */
-  // getMemoryUsage(): MemoryUsage {
-  //   return CacheUtils.calculateMemoryUsage(this.store);
-  // }
+  getMemoryUsage(): MemoryUsage {
+    return CacheUtils.calculateMemoryUsage(this.store);
+  }
 
   /**
    * Evict an entry based on the configured eviction policy

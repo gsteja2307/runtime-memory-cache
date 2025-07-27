@@ -1,17 +1,21 @@
 # Runtime Memory Cache
 
-A lightweight, high-performance in-memory cache for Node.js with TTL support, automatic cleanup, and zero dependencies.
+A lightweight, high-performance in-memory cache for Node.js with TTL support, automatic cleanup, memory usage tracking, and zero dependencies.
 
 ## ✨ Features
 
 - **Fast O(1) lookups** using native JavaScript Map
 - **TTL (Time To Live) support** with automatic expiration
-- **Size limiting** with FIFO eviction policy
+- **Size limiting** with FIFO or LRU eviction policy
 - **Statistics tracking** (optional)
 - **Manual cleanup** of expired entries
+- **Memory usage tracking** with `getMemoryUsage()`
 - **Zero dependencies**
 - **TypeScript support** with full type definitions
 - **Memory efficient** with automatic garbage collection
+## 🧪 Test Coverage
+
+This package includes comprehensive test coverage for all features, including edge cases, validation, eviction, TTL, statistics, and utility logic. Run `npm test` to verify all tests pass.
 
 ## 📦 Installation
 
@@ -142,7 +146,7 @@ console.log(cache.getEvictionPolicy()); // 'FIFO' or 'LRU'
 ```
 
 #### `getMemoryUsage(): { estimatedBytes: number; averageBytesPerEntry: number }`
-Get estimated memory usage of the cache. (NOT RELEASED)
+Get estimated memory usage of the cache.
 
 ```typescript
 const memInfo = cache.getMemoryUsage();
@@ -162,11 +166,11 @@ interface CacheStats {
   maxSize: number;     // Maximum allowed size
   evictions: number;   // Number of evicted entries
 }
-(NOT RELEASED)
-interface memoryUsage {       // Memory usage tracking
-    estimatedBytes: number;        // Total estimated bytes
-    averageBytesPerEntry: number;  // Average bytes per entry
-  };
+
+interface MemoryUsage {       // Memory usage tracking
+  estimatedBytes: number;        // Total estimated bytes
+  averageBytesPerEntry: number;  // Average bytes per entry
+};
 ```
 
 ## 🔧 Usage Examples

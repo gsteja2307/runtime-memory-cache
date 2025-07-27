@@ -5,10 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-- **Memory Tracking**: New `getMemoryUsage()` method provides detailed memory usage statistics
+
+## [0.3.0] - 2025-07-28
+
+### Added
+- **Memory Tracking Released**: `getMemoryUsage()` method is now available in the public API, providing memory usage statistics:
   - `estimatedBytes`: Total estimated memory usage in bytes
   - `averageBytesPerEntry`: Average memory usage per cache entry
+- **Comprehensive Test Coverage**: All features, edge cases, validation, eviction, TTL, statistics, and utility logic are now fully covered by automated tests.
+
+### Changed
+- **Documentation**: Updated README to document `getMemoryUsage` as a released feature and highlight improved test coverage.
+
 
 ## [0.2.0] - 2025-07-21
 

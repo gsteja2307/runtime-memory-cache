@@ -1,0 +1,9 @@
+Benchmark: set() x 500000
+set() time: 341.35 ms
+Benchmark: get() x 500000
+get() time: 179.81 ms
+Benchmark: has() x 500000
+has() time: 181.36 ms
+Benchmark: del() x 500000
+del() time: 149.90 ms
+Done.

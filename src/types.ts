@@ -44,4 +44,8 @@ export interface CacheOptions {
   enableStats?: boolean;
   /** Eviction policy - FIFO (default) or LRU */
   evictionPolicy?: EvictionPolicy;
+  /** Optional custom serialization function */
+  serialize?: (value: any) => string;
+  /** Optional custom deserialization function */
+  deserialize?: (value: string) => any;
 }

@@ -1,3 +1,11 @@
+
+## [0.4.0.alpha.1] - 2025-07-30
+
+### Added
+- **Serialization Support**: New `serialize` and `deserialize` options allow storing and retrieving complex objects, arrays, and custom types in the cache. Defaults to JSON, but can be customized for advanced use cases.
+- **Documentation**: README updated with serialization usage and API details.
+- **Benchmark Script**: Added `bench.js` for performance benchmarking. Results are saved to `bench-results.txt`.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

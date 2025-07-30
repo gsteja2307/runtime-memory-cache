@@ -13,9 +13,25 @@ A lightweight, high-performance in-memory cache for Node.js with TTL support, au
 - **Statistics tracking** (optional)
 - **Manual cleanup** of expired entries
 - **Memory usage tracking** with `getMemoryUsage()`
+- **Serialization support** for complex objects (custom `serialize`/`deserialize`)
 - **Zero dependencies**
 - **TypeScript support** with full type definitions
 - **Memory efficient** with automatic garbage collection
+## 🆕 Serialization Support (0.4.0.alpha.1)
+
+You can now cache complex objects, arrays, and custom types using built-in or custom serialization:
+
+```typescript
+const cache = new RuntimeMemoryCache({
+  serialize: (obj) => JSON.stringify(obj),
+  deserialize: (str) => JSON.parse(str)
+});
+
+cache.set('user', { name: 'Alice', date: new Date().toISOString() });
+const user = cache.get('user');
+```
+
+You may provide your own `serialize`/`deserialize` for advanced types (e.g., Buffer, Date, custom classes).
 ## 🧪 Test Coverage
 
 This package includes comprehensive test coverage for all features, including edge cases, validation, eviction, TTL, statistics, and utility logic. Run `npm test` to verify all tests pass.
@@ -62,6 +78,8 @@ interface CacheOptions {
   maxSize?: number;    // Maximum cache entries (default: 1000)
   enableStats?: boolean; // Enable statistics tracking (default: false)
   evictionPolicy?: 'FIFO' | 'LRU'; // Eviction policy (default: 'FIFO')
+  serialize?: (value: any) => string; // Custom serialization (optional)
+  deserialize?: (value: string) => any; // Custom deserialization (optional)
 }
 ```
 
@@ -307,6 +325,31 @@ Both policies:
 - **Memory efficient** with automatic cleanup of expired entries
 - **Zero dependencies** - no external libraries
 - **TypeScript optimized** with proper type inference
+
+## 🚦 Benchmarking
+
+You can benchmark cache performance using the provided `bench.js` script:
+
+```bash
+npm run build
+node bench.js
+```
+
+This will output results to both the console and `bench-results.txt`.
+
+**Sample output:**
+
+```
+Benchmark: set() x 500000
+set() time: 341.35 ms
+Benchmark: get() x 500000
+get() time: 179.81 ms
+Benchmark: has() x 500000
+has() time: 181.36 ms
+Benchmark: del() x 500000
+del() time: 149.90 ms
+Done.
+```
 
 ## 📄 License
 

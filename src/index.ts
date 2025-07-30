@@ -12,6 +12,8 @@ export class RuntimeMemoryCache {
   private readonly ttl?: number;
   private readonly evictionPolicy: EvictionPolicy;
   private readonly statsTracker?: StatsTracker;
+  private readonly serialize: (value: any) => string;
+  private readonly deserialize: (value: string) => any;
 
   constructor(options: CacheOptions = {}) {
     // Validate options
@@ -21,6 +23,8 @@ export class RuntimeMemoryCache {
     this.maxSize = options.maxSize || 1000;
     this.evictionPolicy = options.evictionPolicy || 'FIFO';
     this.statsTracker = options.enableStats ? new StatsTracker(this.maxSize) : undefined;
+    this.serialize = options.serialize || JSON.stringify;
+    this.deserialize = options.deserialize || JSON.parse;
   }
 
   /**
@@ -40,7 +44,9 @@ export class RuntimeMemoryCache {
       }
 
       const expiresAt = CacheUtils.calculateExpiresAt(ttl, this.ttl);
-      const entry = CacheUtils.createEntry(value, expiresAt);
+      // Serialize value before storing
+      const serialized = this.serialize(value);
+      const entry = CacheUtils.createEntry(serialized, expiresAt);
 
       this.store.set(key, entry);
       this.updateStats();
@@ -81,7 +87,13 @@ export class RuntimeMemoryCache {
     }
 
     this.statsTracker?.recordHit();
-    return entry.value;
+    // Deserialize value before returning
+    try {
+      return this.deserialize(entry.value);
+    } catch {
+      // If deserialization fails, return raw value
+      return entry.value;
+    }
   }
 
   /**

@@ -75,10 +75,8 @@ export class RuntimeMemoryCache {
       return undefined;
     }
 
-    // Update access time for LRU policy
-    if (this.evictionPolicy === 'LRU') {
-      CacheUtils.updateAccessTime(entry);
-    }
+    // Update access time for all entries
+    CacheUtils.updateAccessTime(entry);
 
     this.statsTracker?.recordHit();
     return entry.value;
@@ -107,10 +105,8 @@ export class RuntimeMemoryCache {
       return false;
     }
 
-    // Update access time for LRU policy
-    if (this.evictionPolicy === 'LRU') {
-      CacheUtils.updateAccessTime(entry);
-    }
+    // Update access time for all entries
+    CacheUtils.updateAccessTime(entry);
 
     return true;
   }

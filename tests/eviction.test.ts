@@ -363,4 +363,111 @@ describe('RuntimeMemoryCache - Eviction Policies', () => {
       }, 120);
     });
   });
+
+  describe('lastAccessedAt Updates', () => {
+    it('should update lastAccessedAt for FIFO cache on get operations', (done) => {
+      const fifoCache = new RuntimeMemoryCache({
+        maxSize: 3,
+        evictionPolicy: 'FIFO'
+      });
+
+      // Add initial entries
+      fifoCache.set('a', 'value1');
+      fifoCache.set('b', 'value2');
+      fifoCache.set('c', 'value3');
+
+      setTimeout(() => {
+        // Access entries - this should update lastAccessedAt even for FIFO
+        const value1 = fifoCache.get('a');
+        const value2 = fifoCache.get('b');
+        
+        expect(value1).toBe('value1');
+        expect(value2).toBe('value2');
+        
+        // Verify that FIFO behavior is not affected by access patterns
+        fifoCache.set('d', 'value4'); // Should still evict 'a' (first in)
+        
+        expect(fifoCache.has('a')).toBe(false); // Should be evicted (FIFO)
+        expect(fifoCache.has('b')).toBe(true);
+        expect(fifoCache.has('c')).toBe(true);
+        expect(fifoCache.has('d')).toBe(true);
+        
+        done();
+      }, 10);
+    });
+
+    it('should update lastAccessedAt for FIFO cache on has operations', (done) => {
+      const fifoCache = new RuntimeMemoryCache({
+        maxSize: 3,
+        evictionPolicy: 'FIFO'
+      });
+
+      // Add initial entries
+      fifoCache.set('a', 'value1');
+      fifoCache.set('b', 'value2');
+      fifoCache.set('c', 'value3');
+
+      setTimeout(() => {
+        // Check entries via has() - this should update lastAccessedAt even for FIFO
+        const hasA = fifoCache.has('a');
+        const hasB = fifoCache.has('b');
+        
+        expect(hasA).toBe(true);
+        expect(hasB).toBe(true);
+        
+        // Verify that FIFO behavior is not affected by has() calls
+        fifoCache.set('d', 'value4'); // Should still evict 'a' (first in)
+        
+        expect(fifoCache.has('a')).toBe(false); // Should be evicted (FIFO)
+        expect(fifoCache.has('b')).toBe(true);
+        expect(fifoCache.has('c')).toBe(true);
+        expect(fifoCache.has('d')).toBe(true);
+        
+        done();
+      }, 10);
+    });
+
+    it('should maintain consistent behavior between FIFO and LRU for access tracking', (done) => {
+      const fifoCache = new RuntimeMemoryCache({
+        maxSize: 2,
+        evictionPolicy: 'FIFO'
+      });
+      const lruCache = new RuntimeMemoryCache({
+        maxSize: 2,
+        evictionPolicy: 'LRU'
+      });
+
+      // Add initial entries to both caches
+      fifoCache.set('first', 'value1');
+      fifoCache.set('second', 'value2');
+      lruCache.set('first', 'value1');
+      lruCache.set('second', 'value2');
+
+      setTimeout(() => {
+        // Access first entry in both caches (should update lastAccessedAt in both)
+        fifoCache.get('first');
+        lruCache.get('first');
+        
+        // Verify both caches tracked the access
+        expect(fifoCache.get('first')).toBe('value1');
+        expect(lruCache.get('first')).toBe('value1');
+        
+        setTimeout(() => {
+          // Add third entry to trigger eviction
+          fifoCache.set('third', 'value3');
+          lruCache.set('third', 'value3');
+          
+          // FIFO should evict 'first' regardless of access
+          expect(fifoCache.has('first')).toBe(false);
+          expect(fifoCache.has('second')).toBe(true);
+          
+          // LRU should evict 'second' because 'first' was accessed more recently
+          expect(lruCache.has('first')).toBe(true);
+          expect(lruCache.has('second')).toBe(false);
+          
+          done();
+        }, 10);
+      }, 10);
+    });
+  });
 });

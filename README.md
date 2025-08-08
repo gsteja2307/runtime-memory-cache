@@ -282,6 +282,7 @@ When the cache reaches `maxSize`, it automatically removes entries based on the 
 - Removes the entry that hasn't been accessed for the longest time
 - Better cache hit rates for access-pattern-based scenarios
 - Uses access time tracking for eviction decisions
+- On `get()` and `has()`, the accessed key is reordered via delete-and-reinsert to the Map, preserving `createdAt` and `expiresAt` while updating `lastAccessedAt`.
 
 ```typescript
 // FIFO Cache (default)

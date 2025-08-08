@@ -6,12 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [Unreleased]
+
+<!-- No unreleased changes yet -->
+
+
 ## [0.3.1] - 2025-01-03
 
 ### Changed
 - **Enhanced Access Tracking**: The `lastAccessedAt` property is now updated on all cache entries during `.get()` and `.has()` operations, regardless of eviction policy (FIFO/LRU)
 - **Improved Consistency**: Previously, `lastAccessedAt` was only updated when eviction policy was set to 'LRU', now it's consistently maintained across all eviction policies
 - **Future Compatibility**: This change enables future features that may depend on access time tracking
+- **LRU access reordering**: On `get()` and `has()` with `evictionPolicy: 'LRU'`, the accessed key is deleted and reinserted to the Map to move it to the most-recently-used position. This preserves `createdAt` and `expiresAt`, and updates only `lastAccessedAt`.
+- **Docs**: Updated README to clarify LRU reordering behavior and the preservation of metadata.
 
 ### Added
 - **Comprehensive Test Coverage**: Added specific tests to verify `lastAccessedAt` updates work correctly for FIFO caches

@@ -75,8 +75,12 @@ export class RuntimeMemoryCache {
       return undefined;
     }
 
-    // Update access time for all entries
     CacheUtils.updateAccessTime(entry);
+    // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
+    if (this.evictionPolicy === 'LRU') {
+      this.store.delete(key);
+      this.store.set(key, entry);
+    }
 
     this.statsTracker?.recordHit();
     return entry.value;
@@ -104,9 +108,14 @@ export class RuntimeMemoryCache {
       this.updateStats();
       return false;
     }
-
-    // Update access time for all entries
+    //TODO: add a key to update accesstime only if user wants to update on touch
+    // Update access time for all entries 
     CacheUtils.updateAccessTime(entry);
+    // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
+    if (this.evictionPolicy === 'LRU') {
+      this.store.delete(key);
+      this.store.set(key, entry);
+    }
 
     return true;
   }

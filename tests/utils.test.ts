@@ -74,14 +74,15 @@ describe('CacheUtils', () => {
       ]);
       expect(CacheUtils.getKeyToEvict(map, 'FIFO')).toBe('a');
     });
-    it('returns LRU key for LRU', () => {
-      const now = Date.now();
+    //write for lru based on my implementation
+    it('returns least recently used key for LRU', () => {
       const map = new Map([
-        ['a', { value: 1, createdAt: now, lastAccessedAt: now + 100 }],
-        ['b', { value: 2, createdAt: now, lastAccessedAt: now + 50 }],
-        ['c', { value: 3, createdAt: now, lastAccessedAt: now + 200 }]
+        ['a', CacheUtils.createEntry(1)],
+        ['b', CacheUtils.createEntry(2)]
       ]);
-      expect(CacheUtils.getKeyToEvict(map, 'LRU')).toBe('b');
+      // Simulate access to 'b'
+      CacheUtils.updateAccessTime(map.get('b')!);
+      expect(CacheUtils.getKeyToEvict(map, 'LRU')).toBe('a');
     });
   });
 

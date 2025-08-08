@@ -50,23 +50,8 @@ export class CacheUtils {
   static getKeyToEvict<K>(store: Map<K, CacheEntry>, evictionPolicy: EvictionPolicy): K | undefined {
     if (store.size === 0) return undefined;
 
-    if (evictionPolicy === 'FIFO') {
-      // Return the first key (oldest inserted)
-      return store.keys().next().value;
-    } else {
-      // LRU: Find the least recently used entry
-      let lruKey: K | undefined = undefined;
-      let oldestAccessTime = Number.MAX_SAFE_INTEGER;
+    return store.keys().next().value;
 
-      for (const [key, entry] of store.entries()) {
-        if (entry.lastAccessedAt < oldestAccessTime) {
-          oldestAccessTime = entry.lastAccessedAt;
-          lruKey = key;
-        }
-      }
-
-      return lruKey;
-    }
   }
 
   /**

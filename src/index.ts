@@ -75,9 +75,11 @@ export class RuntimeMemoryCache {
       return undefined;
     }
 
-    // Update access time for LRU policy
+    CacheUtils.updateAccessTime(entry);
+    // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
     if (this.evictionPolicy === 'LRU') {
-      CacheUtils.updateAccessTime(entry);
+      this.store.delete(key);
+      this.store.set(key, entry);
     }
 
     this.statsTracker?.recordHit();
@@ -106,10 +108,13 @@ export class RuntimeMemoryCache {
       this.updateStats();
       return false;
     }
-
-    // Update access time for LRU policy
+    // TODO: Add logic to update the access time for a cache entry only if the user has configured the cache to update access time on access ("touch").
+    // Update the access time for the entry.
+    CacheUtils.updateAccessTime(entry);
+    // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
     if (this.evictionPolicy === 'LRU') {
-      CacheUtils.updateAccessTime(entry);
+      this.store.delete(key);
+      this.store.set(key, entry);
     }
 
     return true;

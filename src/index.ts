@@ -109,7 +109,7 @@ export class RuntimeMemoryCache {
       return false;
     }
     // TODO: Add logic to update the access time for a cache entry only if the user has configured the cache to update access time on access ("touch").
-    // Update access time for all entries 
+    // Update the access time for the entry.
     CacheUtils.updateAccessTime(entry);
     // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
     if (this.evictionPolicy === 'LRU') {

@@ -108,7 +108,7 @@ export class RuntimeMemoryCache {
       this.updateStats();
       return false;
     }
-    //TODO: add a key to update accesstime only if user wants to update on touch
+    // TODO: Add logic to update the access time for a cache entry only if the user has configured the cache to update access time on access ("touch").
     // Update access time for all entries 
     CacheUtils.updateAccessTime(entry);
     // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt

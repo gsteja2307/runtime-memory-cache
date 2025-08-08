@@ -74,7 +74,7 @@ describe('CacheUtils', () => {
       ]);
       expect(CacheUtils.getKeyToEvict(map, 'FIFO')).toBe('a');
     });
-    //write for lru based on my implementation
+    // Test LRU behavior based on current implementation
     it('returns least recently used key for LRU', () => {
       const map = new Map([
         ['a', CacheUtils.createEntry(1)],

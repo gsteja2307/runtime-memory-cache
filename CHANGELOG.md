@@ -6,9 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [0.3.2] - 2025-01-03
 
-<!-- No unreleased changes yet -->
+### Added
+- **Enhanced Test Coverage**: Added comprehensive test suite for access time tracking (`tests/access-time.test.ts`)
+  - Verifies `lastAccessedAt` updates for both FIFO and LRU policies
+  - Tests access time behavior on `get()`, `has()`, and `set()` operations
+  - Validates consistency across different cache operations
+  - Ensures proper handling of expired entries
+
+### Changed
+- **Improved Documentation**: Enhanced README with dedicated section on access time tracking
+  - Added detailed explanation of when `lastAccessedAt` is updated
+  - Clarified behavior differences between FIFO and LRU policies
+  - Highlighted the feature in the main features list
+- **Comprehensive Access Time Testing**: Added 7 new test cases covering edge cases and cross-policy consistency
 
 
 ## [0.3.1] - 2025-01-03

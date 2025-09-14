@@ -10,6 +10,7 @@ A lightweight, high-performance in-memory cache for Node.js with TTL support, au
 - **Fast O(1) lookups** using native JavaScript Map
 - **TTL (Time To Live) support** with automatic expiration
 - **Size limiting** with FIFO or LRU eviction policy
+- **Comprehensive access time tracking** - `lastAccessedAt` updated on all cache operations
 - **Statistics tracking** (optional)
 - **Manual cleanup** of expired entries
 - **Memory usage tracking** with `getMemoryUsage()`
@@ -176,6 +177,29 @@ interface MemoryUsage {       // Memory usage tracking
 };
 ```
 
+## 🕒 Access Time Tracking
+
+The cache automatically tracks access times for all entries, regardless of eviction policy:
+
+- **`lastAccessedAt`** is updated on `get()`, `has()`, and `set()` operations
+- **FIFO policy**: Uses access time for consistency and future compatibility
+- **LRU policy**: Uses access time for eviction decisions
+- **All cache entries** maintain this metadata for comprehensive tracking
+
+```typescript
+// Access time is updated automatically
+cache.set('key', 'value');     // Updates lastAccessedAt when created
+cache.get('key');              // Updates lastAccessedAt on retrieval
+cache.has('key');              // Updates lastAccessedAt on existence check
+cache.set('key', 'newValue');  // Updates lastAccessedAt when overwritten
+```
+
+This feature enables:
+- **Consistent behavior** across eviction policies
+- **Future extensibility** for advanced cache features
+- **Debugging and analytics** capabilities
+- **Reliable LRU eviction** based on actual access patterns
+
 ## 🔧 Usage Examples
 
 ### API Response Caching
@@ -276,13 +300,13 @@ When the cache reaches `maxSize`, it automatically removes entries based on the 
 - Removes the oldest inserted entry first
 - Simple and predictable behavior
 - Good for time-based caching scenarios
-- Tracks access time for consistency (but doesn't use it for eviction)
+- **Tracks access time for all operations** (`get()`, `has()`, `set()`) for consistency and future compatibility
 
 ### **LRU (Least Recently Used)**
 - Removes the entry that hasn't been accessed for the longest time
 - Better cache hit rates for access-pattern-based scenarios
-- Uses access time tracking for eviction decisions
-- On `get()` and `has()`, the accessed key is reordered via delete-and-reinsert to the Map, preserving `createdAt` and `expiresAt` while updating `lastAccessedAt`.
+- **Uses access time tracking for eviction decisions**
+- On `get()` and `has()`, the accessed key is reordered via delete-and-reinsert to the Map, preserving `createdAt` and `expiresAt` while updating `lastAccessedAt`
 
 ```typescript
 // FIFO Cache (default)
@@ -302,7 +326,7 @@ Both policies:
 1. Automatically remove entries when cache is full
 2. Track eviction count in statistics
 3. Maintain O(1) average performance
-4. Update access time on `get()` and `has()` operations for consistency
+4. **Update access time on all cache operations** (`get()`, `has()`, `set()`) for consistency and future extensibility
 
 ## ⚡ Performance
 

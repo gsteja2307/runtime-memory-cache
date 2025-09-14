@@ -22,9 +22,24 @@ This package includes comprehensive test coverage for all features, including ed
 
 ## 📦 Installation
 
+### Using npm
 ```bash
 npm install runtime-memory-cache
 ```
+
+### Using yarn
+```bash
+yarn add runtime-memory-cache
+```
+
+### Using pnpm
+```bash
+pnpm add runtime-memory-cache
+```
+
+### Requirements
+- Node.js 14+ (recommended: Node.js 16+)
+- No additional dependencies required (zero-dependency package)
 
 ## 🚀 Quick Start
 
@@ -315,9 +330,84 @@ Both policies:
 
 MIT
 
+## 🔧 Development Setup
+
+### Prerequisites
+- Node.js 16+ and npm
+- TypeScript knowledge for contributing
+
+### Getting Started
+```bash
+# Clone the repository
+git clone https://github.com/gsteja2307/runtime-memory-cache.git
+cd runtime-memory-cache
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode (for development)
+npm run test:watch
+
+# Clean build artifacts
+npm run clean
+
+# Run the playground examples
+npm run play
+```
+
+### Project Structure
+```
+src/
+├── index.ts      # Main cache implementation
+├── types.ts      # TypeScript interfaces and types
+├── utils.ts      # Utility functions for cache operations
+├── stats.ts      # Statistics tracking functionality
+├── exports.ts    # Centralized exports
+└── playground.ts # Usage examples and testing
+
+tests/
+├── basic.test.ts        # Basic cache operations
+├── ttl.test.ts          # TTL and expiration tests
+├── eviction.test.ts     # Eviction policy tests
+├── statistics.test.ts   # Statistics tracking tests
+├── validation.test.ts   # Input validation tests
+├── utils.test.ts        # Utility function tests
+└── integration.test.ts  # Integration and performance tests
+```
+
+### Available Scripts
+- `npm run build` - Compile TypeScript to JavaScript
+- `npm run test` - Run all tests
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run test:watch` - Run tests in watch mode
+- `npm run clean` - Remove build artifacts
+- `npm run dev` - Run development version with ts-node
+- `npm run play` - Run playground examples
+- `npm run publishPackage` - Build, test, and publish to npm
+
 ## 🤝 Contributing
 
 Contributions welcome! Please read our contributing guidelines and submit pull requests to our repository.
+
+### Contribution Guidelines
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass (`npm test`)
+6. Build the project (`npm run build`)
+7. Commit your changes (`git commit -m 'Add amazing feature'`)
+8. Push to the branch (`git push origin feature/amazing-feature`)
+9. Open a Pull Request
 
 ## 📞 Support
 

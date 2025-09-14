@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- No unreleased changes yet -->
 
 
+## [0.3.2] - 2025-09-14
+
+### Changed
+- **Enhanced Documentation**: Improved README with comprehensive installation instructions for npm, yarn, and pnpm
+- **Development Setup**: Added detailed development setup guide with project structure, available scripts, and contribution guidelines
+- **Installation Guide**: Added Node.js version requirements and clarified zero-dependency nature
+- **Developer Experience**: Enhanced setup instructions for contributors and maintainers
+
+### Fixed
+- **Documentation**: Clarified installation options and development workflow
+
+
 ## [0.3.1] - 2025-01-03
 
 ### Changed

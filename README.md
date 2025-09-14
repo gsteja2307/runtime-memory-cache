@@ -311,13 +311,44 @@ Both policies:
 - **Zero dependencies** - no external libraries
 - **TypeScript optimized** with proper type inference
 
+## 🔧 Development
+
+### Testing Requirements
+All pull requests must pass the automated test suite before merging. The CI workflow runs:
+
+- **Unit Tests**: `npm run test` - All test suites must pass
+- **Build Verification**: `npm run build` - Code must compile successfully
+- **Coverage Report**: `npm run test:coverage` - Maintains test coverage standards
+
+### Running Tests Locally
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode during development
+npm run test:watch
+
+# Build the project
+npm run build
+```
+
+### CI/CD Pipeline
+The project uses GitHub Actions for continuous integration. The CI workflow:
+- Runs on all pull requests to `main`/`master` branches
+- Tests on Node.js 18.x and 20.x
+- Ensures all tests pass before allowing merge
+- Generates coverage reports
+
 ## 📄 License
 
 MIT
 
 ## 🤝 Contributing
 
-Contributions welcome! Please read our contributing guidelines and submit pull requests to our repository.
+Contributions welcome! Please read our contributing guidelines and submit pull requests to our repository. All contributions must pass the automated test suite.
 
 ## 📞 Support
 

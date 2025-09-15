@@ -110,7 +110,7 @@ export class RuntimeMemoryCache {
   /**
    * Check if a key exists and is not expired
    */
-  has(key: string): boolean {
+  has(key: string, skipTouch?: boolean): boolean {
     try {
       ValidationUtils.validateKey(key);
     } catch (error) {
@@ -129,13 +129,15 @@ export class RuntimeMemoryCache {
       this.updateStats();
       return false;
     }
-    // TODO: Add logic to update the access time for a cache entry only if the user has configured the cache to update access time on access ("touch").
-    // Update the access time for the entry.
-    CacheUtils.updateAccessTime(entry);
-    // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
-    if (this.evictionPolicy === 'LRU') {
-      this.store.delete(key);
-      this.store.set(key, entry);
+    
+    // Update the access time for the entry only if skipTouch is not true
+    if (!skipTouch) {
+      CacheUtils.updateAccessTime(entry);
+      // LRU: move the key to the end by reinserting while preserving createdAt/expiresAt
+      if (this.evictionPolicy === 'LRU') {
+        this.store.delete(key);
+        this.store.set(key, entry);
+      }
     }
 
     return true;

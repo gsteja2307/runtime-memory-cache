@@ -90,7 +90,9 @@ After making any changes to core cache functionality, ALWAYS run through the pla
 2. Implement functionality in appropriate module (`index.ts`, `utils.ts`, or `stats.ts`)
 3. Add comprehensive tests covering edge cases
 4. Update playground examples if the feature affects user-facing API
-5. Run full validation suite
+5. Update CHANGELOG.md and README.md documentation
+6. Update package version following semantic versioning rules
+7. Run full validation suite
 
 ### Debugging issues:
 - Use `npm run play` to reproduce issues with realistic data
@@ -103,6 +105,145 @@ After making any changes to core cache functionality, ALWAYS run through the pla
 - Test with large datasets using integration tests
 - Monitor memory usage via `getMemoryUsage()` method
 - Verify eviction policies work efficiently under load
+
+## Documentation and Release Management
+
+### Changelog Management (CHANGELOG.md):
+The project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+**ALWAYS update CHANGELOG.md when making changes:**
+
+1. **Add unreleased changes** to the `[Unreleased]` section at the top
+2. **Use the correct category headers:**
+   - `### Added` - for new features
+   - `### Changed` - for changes in existing functionality
+   - `### Deprecated` - for soon-to-be removed features
+   - `### Removed` - for now removed features
+   - `### Fixed` - for any bug fixes
+   - `### Security` - in case of vulnerabilities
+
+3. **Format entries consistently:**
+   - Use bullet points with descriptive messages
+   - Include **bold keywords** for feature names
+   - Provide context about the change and its impact
+   - Reference specific methods, interfaces, or modules affected
+
+4. **Example changelog entry format:**
+   ```markdown
+   ## [Unreleased]
+   
+   ### Added
+   - **New Eviction Policy**: Added support for Time-Based eviction policy alongside FIFO and LRU
+   - **Enhanced Statistics**: Added `averageAccessTime` and `hotKeys` tracking to cache statistics
+   
+   ### Changed
+   - **API Enhancement**: Updated `CacheOptions` interface to include `evictionPolicy` with 'TIME_BASED' option
+   - **Performance Improvement**: Optimized key lookup performance by 15% using native Map enhancements
+   
+   ### Fixed
+   - **TTL Bug**: Fixed issue where TTL values were not properly validated for negative numbers
+   ```
+
+5. **When releasing a version:**
+   - Move `[Unreleased]` content to a new versioned section like `[X.Y.Z] - YYYY-MM-DD`
+   - Clear the `[Unreleased]` section and add `<!-- No unreleased changes yet -->`
+
+### README Documentation Updates:
+The README.md follows a structured format with emoji headers and comprehensive sections.
+
+**ALWAYS update README.md for user-facing changes:**
+
+1. **Update version badges** if the npm package version changes
+2. **Update Features section (✨ Features)** for new capabilities
+3. **Update API Reference section (📚 API Reference)** for:
+   - New constructor options in `CacheOptions` interface
+   - New methods in the main class
+   - Changed method signatures or behavior
+   - New return types or interfaces
+
+4. **Update Usage Examples section (🔧 Usage Examples)** for:
+   - New features that benefit from examples
+   - Changes to existing API usage patterns
+   - New configuration options or best practices
+
+5. **Update Architecture section (🏗️ Architecture)** if:
+   - New modules are added to `src/`
+   - Existing modules get significant functionality changes
+   - New design patterns or architectural decisions
+
+6. **Maintain consistency:**
+   - Keep the emoji-based section headers consistent
+   - Use TypeScript code blocks with proper syntax highlighting
+   - Include practical, realistic examples
+   - Update any performance claims or statistics if they change
+
+### Package Version Management (Semantic Versioning):
+This project strictly follows [Semantic Versioning (SemVer)](https://semver.org/spec/v2.0.0.html) rules.
+
+**Version format: MAJOR.MINOR.PATCH (e.g., 1.2.3)**
+
+**ALWAYS update package.json version appropriately:**
+
+1. **PATCH version (0.0.X)** - increment for:
+   - Bug fixes that don't break existing functionality
+   - Performance improvements without API changes
+   - Documentation updates
+   - Internal refactoring without behavior changes
+   - Test improvements
+   - Examples: 0.3.1 → 0.3.2
+
+2. **MINOR version (0.X.0)** - increment for:
+   - New features that are backward compatible
+   - New methods or options added to existing interfaces
+   - New optional configuration parameters
+   - Enhanced functionality that doesn't break existing code
+   - Examples: 0.3.1 → 0.4.0
+
+3. **MAJOR version (X.0.0)** - increment for:
+   - Breaking changes to public API
+   - Removal of deprecated features
+   - Changes to method signatures that break existing code
+   - Changes to default behavior that could break existing applications
+   - Examples: 0.3.1 → 1.0.0
+
+**Version update process:**
+1. **Determine the appropriate version bump** based on the changes made
+2. **Update `package.json`** version field manually
+3. **Update CHANGELOG.md** with the new version section
+4. **Ensure all tests pass** before releasing
+5. **Use `npm run publishPackage`** script for publishing (runs clean, build, test, and publish)
+
+**Examples of version bumping:**
+- **Patch (0.3.1 → 0.3.2)**: Fix TTL validation bug, improve test coverage, update documentation
+- **Minor (0.3.1 → 0.4.0)**: Add new `getHotKeys()` method, add new eviction policy option, add new statistics fields
+- **Major (0.3.1 → 1.0.0)**: Remove deprecated methods, change constructor signature, change default eviction policy
+
+### Release Process Validation:
+**ALWAYS follow this checklist before releasing:**
+
+1. **Code Quality:**
+   - [ ] `npm run build` - TypeScript compiles without errors
+   - [ ] `npm run test` - All tests pass (expect 114+ tests)
+   - [ ] `npm run test:coverage` - Coverage thresholds met (80%+ minimum)
+   - [ ] `npm run play` - Manual playground verification works
+
+2. **Documentation:**
+   - [ ] CHANGELOG.md updated with appropriate version section
+   - [ ] README.md updated for any API or feature changes
+   - [ ] package.json version updated following SemVer rules
+   - [ ] All new features documented with examples
+
+3. **Release:**
+   - [ ] Use `npm run publishPackage` for consistent release process
+   - [ ] Verify the package appears correctly on npm
+   - [ ] Test installation and usage in a separate project
+
+**Pre-release checklist for major features:**
+- [ ] Playground examples demonstrate the new functionality
+- [ ] Integration tests cover real-world usage scenarios
+- [ ] Performance impact measured and documented
+- [ ] Breaking change documentation is comprehensive
+- [ ] Migration guide provided for major version bumps
 
 ## Build Requirements
 

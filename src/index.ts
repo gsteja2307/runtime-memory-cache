@@ -34,13 +34,34 @@ export class RuntimeMemoryCache {
         ValidationUtils.validateTTL(ttl);
       }
 
+      const existingEntry = this.store.get(key);
+      const isUpdate = !!existingEntry && !CacheUtils.isExpired(existingEntry);
+
       // Handle cache size limit with configurable eviction policy
-      if (this.store.size >= this.maxSize) {
+      if (!isUpdate && this.store.size >= this.maxSize) {
         this.evictEntry();
       }
 
       const expiresAt = CacheUtils.calculateExpiresAt(ttl, this.ttl);
-      const entry = CacheUtils.createEntry(value, expiresAt);
+      
+      let entry: CacheEntry;
+      if (isUpdate) {
+        // Preserve createdAt, update lastAccessedAt for existing entries
+        entry = {
+          value,
+          expiresAt,
+          createdAt: existingEntry.createdAt,
+          lastAccessedAt: Date.now()
+        };
+        
+        // For LRU: remove and re-add to move to end (most recent position)
+        if (this.evictionPolicy === 'LRU') {
+          this.store.delete(key);
+        }
+      } else {
+        // Create new entry for new keys
+        entry = CacheUtils.createEntry(value, expiresAt);
+      }
 
       this.store.set(key, entry);
       this.updateStats();

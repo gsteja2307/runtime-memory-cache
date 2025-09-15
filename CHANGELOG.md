@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- No unreleased changes yet -->
 
 
+## [0.3.2] - 2025-01-03
+
+### Fixed
+- **Enhanced set() Access Tracking**: The `set()` method now properly updates `lastAccessedAt` when called on existing keys, while preserving the original `createdAt` timestamp
+- **Cross-Policy Consistency**: Ensured consistent `lastAccessedAt` behavior across both FIFO and LRU eviction policies for set operations
+- **LRU Reordering**: Fixed `set()` method to properly move updated keys to the most recent position in LRU cache while preserving metadata
+
+### Added
+- **Comprehensive Test Coverage**: Added dedicated tests for `set()` method access time tracking behavior across both eviction policies
+
+### Changed
+- **Improved set() Logic**: When updating existing cache entries, `set()` now preserves `createdAt` and only updates `lastAccessedAt`, providing more accurate entry lifecycle tracking
+
+
 ## [0.3.1] - 2025-01-03
 
 ### Changed

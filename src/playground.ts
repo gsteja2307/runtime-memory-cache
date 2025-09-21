@@ -109,8 +109,44 @@ setTimeout(() => {
   }, 10);
 }, 10);
 
-// Example 6: Manual cleanup
-console.log('🧹 Example 6: Manual cleanup');
+// Example 6: Skip Touch Feature for has() method
+console.log('👆 Example 6: Skip Touch Feature for has() method');
+const skipTouchCache = new RuntimeMemoryCache({ maxSize: 3, enableStats: true, evictionPolicy: 'LRU' });
+
+// Fill cache to capacity
+skipTouchCache.set('touch-a', 'value_a');
+skipTouchCache.set('touch-b', 'value_b');
+skipTouchCache.set('touch-c', 'value_c');
+console.log('SkipTouch - Initial cache:', skipTouchCache.keys());
+
+setTimeout(() => {
+  console.log('SkipTouch - Checking touch-a with skipTouch=true (should NOT affect LRU order)');
+  console.log('Has touch-a (skipTouch=true):', skipTouchCache.has('touch-a', true));
+  
+  setTimeout(() => {
+    // Add new item - should evict 'touch-a' since it wasn't "touched"
+    skipTouchCache.set('touch-d', 'value_d');
+    console.log('SkipTouch - After adding touch-d:', skipTouchCache.keys());
+    console.log('SkipTouch - touch-a still exists?', skipTouchCache.has('touch-a')); // Should be false
+    
+    // Now demonstrate normal has() behavior
+    console.log('SkipTouch - Checking touch-b with default behavior (should affect LRU order)');
+    console.log('Has touch-b (default):', skipTouchCache.has('touch-b'));
+    
+    setTimeout(() => {
+      // Add another item - should evict 'touch-c' since 'touch-b' was recently accessed
+      skipTouchCache.set('touch-e', 'value_e');
+      console.log('SkipTouch - After adding touch-e:', skipTouchCache.keys());
+      console.log('SkipTouch - touch-b still exists?', skipTouchCache.has('touch-b')); // Should be true
+      console.log('SkipTouch - touch-c still exists?', skipTouchCache.has('touch-c')); // Should be false
+      console.log('SkipTouch - Final stats:', skipTouchCache.getStats());
+      console.log();
+    }, 10);
+  }, 10);
+}, 10);
+
+// Example 7: Manual cleanup
+console.log('🧹 Example 7: Manual cleanup');
 const cleanupCache = new RuntimeMemoryCache({ ttl: 500, enableStats: true });
 cleanupCache.set('expire1', 'data1');
 cleanupCache.set('expire2', 'data2');

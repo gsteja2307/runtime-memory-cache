@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-09-21
+
 ### Added
 - **Skip Touch Feature**: Added optional `skipTouch` parameter to `has(key, skipTouch?)` method for LRU caches
   - When `skipTouch=true`, checking key existence doesn't update access time or affect LRU eviction order

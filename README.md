@@ -10,6 +10,7 @@ A lightweight, high-performance in-memory cache for Node.js with TTL support, au
 - **Fast O(1) lookups** using native JavaScript Map
 - **TTL (Time To Live) support** with automatic expiration
 - **Size limiting** with FIFO or LRU eviction policy
+- **Skip Touch functionality** for LRU caches - check existence without affecting eviction order
 - **Statistics tracking** (optional)
 - **Manual cleanup** of expired entries
 - **Memory usage tracking** with `getMemoryUsage()`
@@ -83,14 +84,23 @@ Retrieve a value. Returns `undefined` if key doesn't exist or has expired.
 const value = cache.get('key');
 ```
 
-#### `has(key: string): boolean`
-Check if key exists and is not expired.
+#### `has(key: string, skipTouch?: boolean): boolean`
+Check if key exists and is not expired. Optionally skip updating access time.
 
 ```typescript
 if (cache.has('key')) {
-  // Key exists and is valid
+  // Key exists and is valid (updates access time for LRU)
+}
+
+// Skip updating access time (useful for LRU caches)
+if (cache.has('key', true)) {
+  // Key exists but LRU order is not affected
 }
 ```
+
+**Parameters:**
+- `key`: The cache key to check
+- `skipTouch`: Optional. When `true`, skips updating access time and LRU order. Default: `false`
 
 #### `del(key: string): boolean`
 Delete a specific key. Returns `true` if key existed.
@@ -257,6 +267,38 @@ function checkRateLimit(clientId: string, maxRequests: number = 100): boolean {
 }
 ```
 
+### Skip Touch Feature with LRU Cache
+
+```typescript
+const lruCache = new RuntimeMemoryCache({ 
+  maxSize: 3,
+  evictionPolicy: 'LRU',
+  enableStats: true 
+});
+
+// Fill cache to capacity
+lruCache.set('user:1', 'Alice');
+lruCache.set('user:2', 'Bob');
+lruCache.set('user:3', 'Charlie');
+
+// Check existence without affecting LRU order
+if (lruCache.has('user:1', true)) {
+  console.log('User 1 exists, but LRU order unchanged');
+}
+
+// Normal check that updates LRU order
+if (lruCache.has('user:2')) {
+  console.log('User 2 exists and moved to most recent');
+}
+
+// Add new user - 'user:1' will be evicted (least recently used)
+// because it wasn't "touched" by the skipTouch check
+lruCache.set('user:4', 'David');
+
+console.log(lruCache.has('user:1')); // false - evicted
+console.log(lruCache.has('user:2')); // true - recently accessed
+```
+
 ## 🏗️ Architecture
 
 The cache is built with a modular architecture:
@@ -283,6 +325,7 @@ When the cache reaches `maxSize`, it automatically removes entries based on the 
 - Better cache hit rates for access-pattern-based scenarios
 - Uses access time tracking for eviction decisions
 - On `get()`, `has()`, and `set()` (for existing keys), the accessed key is reordered via delete-and-reinsert to the Map, preserving `createdAt` and `expiresAt` while updating `lastAccessedAt`.
+- **Skip Touch Feature**: Use `has(key, true)` to check existence without affecting LRU order
 
 ```typescript
 // FIFO Cache (default)
